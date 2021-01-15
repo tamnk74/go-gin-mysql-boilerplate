@@ -1,0 +1,16 @@
+version: "3.3"
+services:
+    elasticsearch:
+      image: elasticsearch:7.7.0
+      container_name: elasticsearch
+      hostname: elasticsearch
+      environment:
+        - "discovery.type=single-node"
+      ports:
+        - 9200:9200
+        - 9300:9300
+      networks:
+        - elknetwork
+networks:
+    elknetwork:
+        driver: bridge
