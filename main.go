@@ -1,8 +1,6 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -11,26 +9,26 @@ import (
 
 	"github.com/tamnk74/todolist-mysql-go/config"
 	"github.com/tamnk74/todolist-mysql-go/database"
-	itemEntity "github.com/tamnk74/todolist-mysql-go/modules/items"
+	"github.com/tamnk74/todolist-mysql-go/router"
 )
 
 var db *gorm.DB
 var err error
 
 func main() {
-	err := godotenv.Load()
+	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	db, err = database.ConnectDb()
+	err = database.Connect()
 	if err != nil {
 		panic("Failed to connect database")
 	}
-	log.Info("Starting Todolist API server")
-	r := gin.Default()
+	log.Info("Starting API server at port " + config.PORT)
+	r := gin.New()
+	r.Use(gin.Logger())
+	r.Use(gin.Recovery())
 	r.Use(cors.Default())
-
-	api := r.Group("/api")
-	itemEntity.RegisterRouters(api, db)
-	r.Run(fmt.Sprintf(":%s", config.PORT))
+	router.Init(r)
+	r.Run(":" + config.PORT)
 }

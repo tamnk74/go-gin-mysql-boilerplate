@@ -9,8 +9,11 @@ import (
 	config "github.com/tamnk74/todolist-mysql-go/config"
 )
 
+var db *gorm.DB
+var err error
+
 // ConnectDb connect to mysql
-func ConnectDb() (*gorm.DB, error) {
+func Connect() error {
 	dsn := fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8",
 		config.DB_USERNAME,
@@ -19,6 +22,11 @@ func ConnectDb() (*gorm.DB, error) {
 		config.DB_PORT,
 		config.DB_NAME,
 	)
+	db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
-	return gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	return err
+}
+
+func GetDB() *gorm.DB {
+	return db
 }

@@ -1,11 +1,21 @@
 package config
 
 import (
+	"fmt"
+	"log"
 	"os"
+	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
 func getEnv(key string, defaultVal string) string {
-	if value, exists := os.LookupEnv(key); exists {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	if value := os.Getenv(key); value != "" {
+		fmt.Println(key, value)
 		return value
 	}
 
@@ -13,6 +23,10 @@ func getEnv(key string, defaultVal string) string {
 }
 
 var PORT = getEnv("PORT", "8000")
+
+var JWT_SECRET = getEnv("JWT_SECRET", "golang")
+var JWT_EXP, _ = strconv.Atoi(getEnv("JWT_EXP", "3600"))
+
 var DB_USERNAME = getEnv("DB_USERNAME", "root")
 var DB_PASSWORD = getEnv("DB_PASSWORD", "")
 var DB_HOST = getEnv("DB_HOST", "127.0.0.1")
