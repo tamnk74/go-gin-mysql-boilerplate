@@ -36,7 +36,8 @@ func VerifyAccessToken(tokenString string) (models.User, bool) {
 
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		return models.User{
-			ID: int(claims["id"].(float64)),
+			ID:    uint(claims["id"].(float64)),
+			Email: claims["email"].(string),
 		}, true
 	}
 

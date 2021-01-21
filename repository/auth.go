@@ -33,6 +33,9 @@ func (m *authRepository) FindUserByEmail(email string) (res models.User, err err
 }
 
 func (m *authRepository) Create(user models.User) (res models.User, err error) {
-	m.Conn.Create(&user)
+	result := m.Conn.Create(&user)
+	if result.Error != nil {
+		return models.User{}, result.Error
+	}
 	return user, nil
 }

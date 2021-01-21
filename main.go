@@ -9,6 +9,7 @@ import (
 
 	"github.com/tamnk74/todolist-mysql-go/config"
 	"github.com/tamnk74/todolist-mysql-go/database"
+	"github.com/tamnk74/todolist-mysql-go/middlewares"
 	"github.com/tamnk74/todolist-mysql-go/router"
 )
 
@@ -29,6 +30,7 @@ func main() {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
+	r.Use(middlewares.HandleApiError())
 	router.Init(r)
 	r.Run(":" + config.PORT)
 }
