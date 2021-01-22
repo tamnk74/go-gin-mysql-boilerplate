@@ -1,8 +1,11 @@
 package main
 
 import (
+	"os"
+
 	"github.com/tamnk74/todolist-mysql-go/database"
-	"github.com/tamnk74/todolist-mysql-go/models"
+	"github.com/tamnk74/todolist-mysql-go/database/migration"
+	"github.com/tamnk74/todolist-mysql-go/database/seeder"
 )
 
 func main() {
@@ -11,6 +14,20 @@ func main() {
 		panic("Failed to connect database")
 	}
 	db := database.GetDB()
-	db.AutoMigrate(&models.User{})
-	db.AutoMigrate(&models.Item{})
+
+	migration.MigrateUser(db)
+	migration.MigrateItem(db)
+
+	if len(os.Args) <= 2 {
+		return
+	}
+	option := os.Args[1]
+	if option == "seed" {
+		switch os.Args[2] {
+		case "users":
+			seeder.SeedUser(db)
+		case "items":
+			seeder.SeedItem(db)
+		}
+	}
 }
