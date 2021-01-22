@@ -11,7 +11,7 @@ import (
 )
 
 type ItemRepository interface {
-	ListItems(ctx context.Context, pagi schema.Pagination) (res []models.Item, total int64, err error)
+	ListItems(ctx context.Context, pagi *schema.Pagination) (res []models.Item, err error)
 	CreateItem(ctx context.Context, item models.Item) (models.Item, error)
 }
 
@@ -24,12 +24,14 @@ func NewItemRepository() ItemRepository {
 	return &itemRepository{database.GetDB()}
 }
 
-func (m *itemRepository) ListItems(ctx context.Context, pagi schema.Pagination) (res []models.Item, total int64, err error) {
+func (m *itemRepository) ListItems(ctx context.Context, pagi *schema.Pagination) (res []models.Item, err error) {
 	var items []models.Item
 	var count int64
-	m.Conn.Limit(pagi.Limit).Offset(int(pagi.Page-1) * pagi.Limit).Find(&items)
+	m.Conn.Limit(pagi.Limit).Offset(pagi.Offset).Find(&items)
 	m.Conn.Model(&models.Item{}).Count(&count)
-	return items, count, nil
+	pagi.Total = count
+	
+	return items, nil
 }
 
 func (m *itemRepository) CreateItem(ctx context.Context, item models.Item) (res models.Item, err error) {

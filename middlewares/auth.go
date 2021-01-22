@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/tamnk74/todolist-mysql-go/dto"
 	"github.com/tamnk74/todolist-mysql-go/utils"
 )
 
@@ -14,8 +15,16 @@ func AuthorizeJWT() gin.HandlerFunc {
 		const BEARER_SCHEMA = "Bearer"
 		authHeader := c.GetHeader("Authorization")
 		if len(authHeader) <= 7 {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(401, gin.H{
+				"errors": []dto.ApiError{
+					{
+						Code:   "ERR-401",
+						Status: http.StatusUnauthorized,
+						Title:  http.StatusText(http.StatusUnauthorized),
+						Detail: http.StatusText(http.StatusUnauthorized),
+					},
+				},
+			})
 			return
 		}
 		tokenString := authHeader[len(BEARER_SCHEMA)+1:]
@@ -24,8 +33,16 @@ func AuthorizeJWT() gin.HandlerFunc {
 			c.Set("user", user)
 			c.Next()
 		} else {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-			c.AbortWithStatus(http.StatusUnauthorized)
+			c.AbortWithStatusJSON(401, gin.H{
+				"errors": []dto.ApiError{
+					{
+						Code:   "ERR-401",
+						Status: http.StatusUnauthorized,
+						Title:  http.StatusText(http.StatusUnauthorized),
+						Detail: http.StatusText(http.StatusUnauthorized),
+					},
+				},
+			})
 			return
 		}
 	}

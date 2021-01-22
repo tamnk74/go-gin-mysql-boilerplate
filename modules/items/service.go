@@ -9,7 +9,7 @@ import (
 )
 
 type ItemService interface {
-	ListItems(ctx context.Context, pagi schema.Pagination) ([]models.Item, int64, error)
+	ListItems(ctx context.Context, pagi *schema.Pagination) ([]models.Item, error)
 	CreateItem(ctx context.Context, item models.Item) (models.Item, error)
 }
 
@@ -24,7 +24,7 @@ func NewItemService(repo repository.ItemRepository) ItemService {
 	}
 }
 
-func (a *itemService) ListItems(c context.Context, pagi schema.Pagination) (res []models.Item, total int64, err error) {
+func (a *itemService) ListItems(c context.Context, pagi *schema.Pagination) (res []models.Item, err error) {
 	return a.itemRepo.ListItems(c, pagi)
 }
 

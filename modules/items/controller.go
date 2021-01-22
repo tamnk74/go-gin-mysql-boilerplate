@@ -34,13 +34,14 @@ func (a *itemController) listItems(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	books, total, _ := a.itemService.ListItems(c.Request.Context(), pagi)
-
+	pagi.FillDefault()
+	books, _ := a.itemService.ListItems(c.Request.Context(), &pagi)
+	pagi.Update()
 	c.JSON(200, gin.H{
 		"meta": gin.H{
-			"total":    total,
+			"total":    pagi.Total,
 			"page":     pagi.Page,
-			"per_page": pagi.Limit,
+			"per_page": pagi.PerPage,
 		},
 		"data": books,
 	})
