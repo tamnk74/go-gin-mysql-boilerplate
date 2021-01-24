@@ -3,6 +3,7 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/tamnk74/todolist-mysql-go/models"
+	Email "github.com/tamnk74/todolist-mysql-go/utils/email"
 )
 
 //login contorller interface
@@ -54,5 +55,6 @@ func (a *authController) register(c *gin.Context) {
 		c.Error(err)
 		return
 	}
+	Email.Send([]string{"khac.tam.94@gmail.com"})
 	c.JSON(200, gin.H{"data": newItem})
 }

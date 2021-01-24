@@ -11,6 +11,8 @@ import (
 	"github.com/tamnk74/todolist-mysql-go/database"
 	"github.com/tamnk74/todolist-mysql-go/middlewares"
 	"github.com/tamnk74/todolist-mysql-go/router"
+	"github.com/tamnk74/todolist-mysql-go/schedulers"
+	"github.com/tamnk74/todolist-mysql-go/utils/redis"
 )
 
 var db *gorm.DB
@@ -21,10 +23,14 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
 	err = database.Connect()
 	if err != nil {
 		panic("Failed to connect database")
 	}
+
+	redis.Init()
+
 	log.Info("Starting API server at port " + config.PORT)
 	r := gin.New()
 	r.Use(gin.Logger())
@@ -32,5 +38,6 @@ func main() {
 	r.Use(cors.Default())
 	r.Use(middlewares.HandleApiError())
 	router.Init(r)
+	schedulers.Init()
 	r.Run(":" + config.PORT)
 }

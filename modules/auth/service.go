@@ -3,10 +3,12 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/tamnk74/todolist-mysql-go/models"
 	"github.com/tamnk74/todolist-mysql-go/repository"
-	"github.com/tamnk74/todolist-mysql-go/utils"
+	Jwt "github.com/tamnk74/todolist-mysql-go/utils/jwt"
+	"github.com/tamnk74/todolist-mysql-go/utils/redis"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -38,8 +40,8 @@ func (a *Auth) Login(email string, password string) (token string, err error) {
 		return "", errors.New("Invalid password")
 	}
 
-	token = utils.GenerateAccessToken(user)
-
+	token = Jwt.GenerateAccessToken(user)
+	redis.SaveToken(strconv.Itoa(int(user.ID)), token)
 	return token, nil
 }
 
