@@ -55,6 +55,8 @@ func (a *authController) register(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	Email.Send([]string{"khac.tam.94@gmail.com"})
+	go func() {
+		Email.Send([]string{"khac.tam.94@gmail.com"})
+	}()
 	c.JSON(200, gin.H{"data": newItem})
 }
