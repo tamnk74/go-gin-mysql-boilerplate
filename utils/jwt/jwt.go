@@ -13,6 +13,7 @@ func GenerateAccessToken(user models.User) string {
 		"id":    user.ID,
 		"email": user.Email,
 		"exp":   time.Duration(config.JWT_EXP) * time.Second,
+		"time":  time.Now(),
 	})
 
 	// Sign and get the complete encoded token as a string using the secret

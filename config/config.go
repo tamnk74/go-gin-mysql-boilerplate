@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -15,7 +14,6 @@ func getEnv(key string, defaultVal string) string {
 		log.Fatalf("Error loading .env file")
 	}
 	if value := os.Getenv(key); value != "" {
-		fmt.Println(key, value)
 		return value
 	}
 

@@ -2,8 +2,10 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/gocraft/work"
+	"github.com/tamnk74/todolist-mysql-go/constants"
 	"github.com/tamnk74/todolist-mysql-go/models"
-	Email "github.com/tamnk74/todolist-mysql-go/utils/email"
+	"github.com/tamnk74/todolist-mysql-go/utils/queue"
 )
 
 //login contorller interface
@@ -55,8 +57,9 @@ func (a *authController) register(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	go func() {
-		Email.Send([]string{"khac.tam.94@gmail.com"})
-	}()
+	queue.CreateJob(constants.SEND_EMAIL_Q, work.Q{
+		"subject": "Welcome " + user.Name + " to Go App",
+		"email":   user.Email,
+	})
 	c.JSON(200, gin.H{"data": newItem})
 }

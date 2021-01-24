@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/tamnk74/todolist-mysql-go/constants"
 	"github.com/tamnk74/todolist-mysql-go/models"
 	"github.com/tamnk74/todolist-mysql-go/repository"
 	Jwt "github.com/tamnk74/todolist-mysql-go/utils/jwt"
@@ -31,7 +32,7 @@ func NewAuthService() AuthService {
 
 func (a *Auth) Login(email string, password string) (token string, err error) {
 	user, err := a.authRepo.FindUserByEmail(email)
-	if err != nil {
+	if err != nil || user.Status == constants.STATUS.INACTIVE {
 		return "", errors.New("Invalid email")
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password))

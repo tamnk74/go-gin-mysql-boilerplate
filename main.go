@@ -12,6 +12,7 @@ import (
 	"github.com/tamnk74/todolist-mysql-go/middlewares"
 	"github.com/tamnk74/todolist-mysql-go/router"
 	"github.com/tamnk74/todolist-mysql-go/schedulers"
+	"github.com/tamnk74/todolist-mysql-go/utils/queue"
 	"github.com/tamnk74/todolist-mysql-go/utils/redis"
 )
 
@@ -39,5 +40,6 @@ func main() {
 	r.Use(middlewares.HandleApiError())
 	router.Init(r)
 	schedulers.Init()
+	queue.Init()
 	r.Run(":" + config.PORT)
 }
