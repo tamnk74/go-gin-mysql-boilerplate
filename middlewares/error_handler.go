@@ -13,8 +13,8 @@ func HandleApiError() gin.HandlerFunc {
 		c.Next()
 		errors := c.Errors.ByType(gin.ErrorTypeAny)
 
-		log.Println("Handle APP error")
 		if len(errors) > 0 {
+			log.Println("Error ", errors)
 			var apiErrors []*dto.ApiError
 			for _, errObj := range errors {
 				err := errObj.Err

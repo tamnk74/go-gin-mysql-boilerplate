@@ -6,12 +6,12 @@ import (
 	"gorm.io/gorm"
 
 	"github.com/tamnk74/todolist-mysql-go/database"
+	dto "github.com/tamnk74/todolist-mysql-go/dto"
 	models "github.com/tamnk74/todolist-mysql-go/models"
-	"github.com/tamnk74/todolist-mysql-go/schema"
 )
 
 type ItemRepository interface {
-	ListItems(ctx context.Context, pagi *schema.Pagination) (res []models.Item, err error)
+	ListItems(ctx context.Context, pagi *dto.Pagination) (res []models.Item, err error)
 	CreateItem(ctx context.Context, item models.Item) (models.Item, error)
 }
 
@@ -24,13 +24,13 @@ func NewItemRepository() ItemRepository {
 	return &itemRepository{database.GetDB()}
 }
 
-func (m *itemRepository) ListItems(ctx context.Context, pagi *schema.Pagination) (res []models.Item, err error) {
+func (m *itemRepository) ListItems(ctx context.Context, pagi *dto.Pagination) (res []models.Item, err error) {
 	var items []models.Item
 	var count int64
 	m.Conn.Limit(pagi.Limit).Offset(pagi.Offset).Find(&items)
 	m.Conn.Model(&models.Item{}).Count(&count)
 	pagi.Total = count
-	
+
 	return items, nil
 }
 

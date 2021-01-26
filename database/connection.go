@@ -15,7 +15,7 @@ var err error
 // ConnectDb connect to mysql
 func Connect() error {
 	dsn := fmt.Sprintf(
-		"%s:%s@tcp(%s:%s)/%s?charset=utf8",
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=true",
 		config.DB_USERNAME,
 		config.DB_PASSWORD,
 		config.DB_HOST,

@@ -1,4 +1,6 @@
-package schema
+package dto
+
+import "github.com/gin-gonic/gin"
 
 type Pagination struct {
 	Limit   int `form:"limit"`
@@ -25,5 +27,13 @@ func (a *Pagination) FillDefault() {
 func (a *Pagination) Update() {
 	if a.Limit == -1 {
 		a.PerPage = int(a.Total)
+	}
+}
+
+func (a *Pagination) GetMeta() gin.H {
+	return gin.H{
+		"total":    a.Total,
+		"page":     a.Page,
+		"per_page": a.PerPage,
 	}
 }

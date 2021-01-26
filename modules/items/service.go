@@ -3,13 +3,13 @@ package items
 import (
 	"context"
 
+	"github.com/tamnk74/todolist-mysql-go/dto"
 	"github.com/tamnk74/todolist-mysql-go/models"
 	"github.com/tamnk74/todolist-mysql-go/repository"
-	"github.com/tamnk74/todolist-mysql-go/schema"
 )
 
 type ItemService interface {
-	ListItems(ctx context.Context, pagi *schema.Pagination) ([]models.Item, error)
+	ListItems(ctx context.Context, pagi *dto.Pagination) ([]models.Item, error)
 	CreateItem(ctx context.Context, item models.Item) (models.Item, error)
 }
 
@@ -24,7 +24,7 @@ func NewItemService(repo repository.ItemRepository) ItemService {
 	}
 }
 
-func (a *itemService) ListItems(c context.Context, pagi *schema.Pagination) (res []models.Item, err error) {
+func (a *itemService) ListItems(c context.Context, pagi *dto.Pagination) (res []models.Item, err error) {
 	return a.itemRepo.ListItems(c, pagi)
 }
 
